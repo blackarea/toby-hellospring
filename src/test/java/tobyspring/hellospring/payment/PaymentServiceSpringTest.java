@@ -1,5 +1,6 @@
 package tobyspring.hellospring.payment;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import tobyspring.hellospring.TestPaymentConfig;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PaymentServiceSpringTest {
 
     @Autowired PaymentService paymentService;
+    @Autowired Clock clock;
     @Autowired ExRateProviderStub exRateProviderStub;
 
     @Test
@@ -33,5 +36,15 @@ class PaymentServiceSpringTest {
         assertThat(payment.getValidUntil()).isAfter(LocalDateTime.now());
         assertThat(payment.getValidUntil()).isBeforeOrEqualTo(LocalDateTime.now().plusMinutes(30));
     }
+
+    @Test
+    void validUntil() throws IOException {
+        Payment payment = paymentService.prepare(1L, "USD", BigDecimal.TEN);
+
+        LocalDateTime now = LocalDateTime.now(this.clock);
+
+        Assertions.assertThat(payment.getValidUntil()).isEqualTo(now.plusMinutes(30));
+    }
+
 
 }
