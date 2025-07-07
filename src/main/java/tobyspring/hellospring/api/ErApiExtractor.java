@@ -6,7 +6,7 @@ import tobyspring.hellospring.exrate.ExRateData;
 
 import java.math.BigDecimal;
 
-public class ErApiExRateExtractor implements ExRateExtractor{
+public class ErApiExtractor implements ExRateExtractor{
 
     @Override
     public BigDecimal extractExRate(String response) throws JsonProcessingException {
